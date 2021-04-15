@@ -18,15 +18,11 @@ def commit(gitdir: pathlib.Path, message: str, author: tp.Optional[str] = None) 
     index = read_index(gitdir)
     return commit_tree(gitdir, tree=write_tree(gitdir, index), message=message, author=author)
 
+
 def checkout(gitdir: pathlib.Path, obj_name: str) -> None:
-    if is_detached(gitdir) and get_ref(gitdir) == obj_name:
-        return
-    elif get_ref(gitdir).split("/")[2] == obj_name:
-        return
-    elif resolve_head(gitdir) == obj_name:
-        return
-    elif (gitdir / "refs" / "heads" / obj_name).exists():
-        with open(gitdir / "refs" / "heads" / obj_name, "r") as f1:
+    head_route = gitdir / "refs" / "heads" / obj_name
+    if head_route.exists():
+        with head_route.open(mode="r") as f1:
             obj_name = f1.read()
     index = read_index(gitdir)
     for entry in index:
@@ -36,8 +32,8 @@ def checkout(gitdir: pathlib.Path, obj_name: str) -> None:
             else:
                 os.chmod(entry.name, 0o777)
                 os.remove(entry.name)
-    print(obj_name)
-    with open(gitdir / "objects" / obj_name[:2] / obj_name[2:], "rb") as f2:
+    object_all_path = gitdir / "objects" / obj_name[:2] / obj_name[2:]
+    with object_all_path.open(mode="rb") as f2:
         commit_content = f2.read()
     tree_sha = commit_parse(commit_content).decode()
 
