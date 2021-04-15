@@ -11,6 +11,7 @@ def repo_find(workdir: tp.Union[str, pathlib.Path] = ".") -> pathlib.Path:
     except:
         git_dir_pointer=".git"
     git_dir = None
+    workdir=pathlib.Path(workdir)
     try:
         workdir.parents
     except:

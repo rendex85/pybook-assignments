@@ -36,3 +36,6 @@ class Console(UI):
             #time.sleep(1)
             # PUT YOUR CODE HERE
         curses.endwin()
+life = GameOfLife((24, 80), max_generations=50)
+ui = Console(life)
+ui.run()
