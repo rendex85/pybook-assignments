@@ -16,6 +16,8 @@ def repo_find(workdir: tp.Union[str, pathlib.Path] = ".") -> pathlib.Path:
         workdir.parents
     except:
         raise Exception("Not a git repository")
+    if not pathlib.Path("/" + git_dir_pointer).is_dir() and len(workdir.parents) == 0:
+        raise Exception("Not a git repository")
     if len(workdir.parents) == 0:
         return pathlib.Path("/" + git_dir_pointer)
     else:
